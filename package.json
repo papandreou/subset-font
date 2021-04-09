@@ -1,6 +1,6 @@
 {
   "name": "subset-font",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Create a subset of a TTF/WOFF/WOFF2 font using the wasm build of harfbuzz/hb-subset",
   "main": "index.js",
   "dependencies": {
