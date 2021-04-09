@@ -13,9 +13,7 @@ const loadAndInitializeHarfbuzz = _.once(async () => {
   const {
     instance: { exports },
   } = await WebAssembly.instantiate(
-    await readFile(
-      require.resolve('harfbuzzjs-papandreou/subset/hb-subset.wasm')
-    )
+    await readFile(require.resolve('harfbuzzjs/subset/hb-subset.wasm'))
   );
   exports.memory.grow(400); // each page is 64kb in size
 
