@@ -48,9 +48,9 @@ async function subsetFont(
 
   // Add unicodes indices
   const inputUnicodes = exports.hb_subset_input_unicode_set(input);
-  for (let i = 0; i < text.length; i += 1) {
-    exports.hb_set_add(inputUnicodes, text.charCodeAt(i));
-  }
+  [...text].forEach((c) => {
+    exports.hb_set_add(inputUnicodes, c.codePointAt(0));
+  });
 
   // Enable GSUB/GPOS/GDEF subset, remove once it is enabled by upstream
   const dropTables = exports.hb_subset_input_drop_tables_set(input);
