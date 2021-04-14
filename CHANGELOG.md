@@ -1,3 +1,7 @@
+### v1.1.2 (2021-04-14)
+
+- [Free the original fontBuffer after subsetting](https://github.com/papandreou/subset-font/commit/1170630a1cb3be4a5279facc75cecfd5220ede1f) ([Andreas Lind](mailto:andreas.lind@workday.com))
+
 ### v1.1.1 (2021-04-09)
 
 - [Update harfbuzzjs to ^0.1.4](https://github.com/papandreou/subset-font/commit/cafa582138a368129d674113b2be18000f9274e3) ([Andreas Lind](mailto:andreas.lind@workday.com))
