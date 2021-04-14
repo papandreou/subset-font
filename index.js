@@ -52,18 +52,11 @@ async function subsetFont(
     exports.hb_set_add(inputUnicodes, text.charCodeAt(i));
   }
 
-  exports.hb_set_del(
-    exports.hb_subset_input_drop_tables_set(input),
-    HB_TAG('GSUB')
-  );
-  exports.hb_set_del(
-    exports.hb_subset_input_drop_tables_set(input),
-    HB_TAG('GPOS')
-  );
-  exports.hb_set_del(
-    exports.hb_subset_input_drop_tables_set(input),
-    HB_TAG('GDEF')
-  );
+  // Enable GSUB/GPOS/GDEF subset, remove once it is enabled by upstream
+  const dropTables = exports.hb_subset_input_drop_tables_set(input);
+  exports.hb_set_del(dropTables, HB_TAG('GSUB'));
+  exports.hb_set_del(dropTables, HB_TAG('GPOS'));
+  exports.hb_set_del(dropTables, HB_TAG('GDEF'));
 
   const subset = exports.hb_subset(face, input);
 
