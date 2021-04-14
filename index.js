@@ -68,7 +68,7 @@ async function subsetFont(
 
   const offset = exports.hb_blob_get_data(result, 0);
   const subsetFont = Buffer.from(
-    heapu8.slice(offset, offset + exports.hb_blob_get_length(result))
+    heapu8.subarray(offset, offset + exports.hb_blob_get_length(result))
   );
 
   // Clean up
