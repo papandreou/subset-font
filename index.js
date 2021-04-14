@@ -83,6 +83,7 @@ async function subsetFont(
   // Clean up
   exports.hb_blob_destroy(result);
   exports.hb_face_destroy(subset);
+  exports.free(fontBuffer);
 
   return await fontverter.convert(subsetFont, targetFormat, 'truetype');
 }
