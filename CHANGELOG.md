@@ -1,3 +1,13 @@
+### v1.1.3 (2021-04-15)
+
+#### Pull requests
+
+- [#2](https://github.com/papandreou/subset-font/pull/2) Fix a leak, handle non-BMP characters and performance tweaks ([Ebrahim Byagowi](mailto:ebrahim@gnu.org))
+
+#### Commits to master
+
+- [Use for...of without reintroducing the bug](https://github.com/papandreou/subset-font/commit/84ac1955987f5197b0f037d6cf0dde1622d73397) ([Andreas Lind](mailto:andreas.lind@workday.com))
+
 ### v1.1.2 (2021-04-14)
 
 - [Free the original fontBuffer after subsetting](https://github.com/papandreou/subset-font/commit/1170630a1cb3be4a5279facc75cecfd5220ede1f) ([Andreas Lind](mailto:andreas.lind@workday.com))
