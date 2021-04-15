@@ -44,29 +44,20 @@ async function subsetFont(
   const face = exports.hb_face_create(blob, 0);
   exports.hb_blob_destroy(blob);
 
-  // Add glyph indices and subset
-  const glyphs = exports.hb_set_create();
-
-  for (let i = 0; i < text.length; i += 1) {
-    exports.hb_set_add(glyphs, text.charCodeAt(i));
-  }
-
   const input = exports.hb_subset_input_create_or_fail();
-  const inputGlyphs = exports.hb_subset_input_unicode_set(input);
-  exports.hb_set_del(
-    exports.hb_subset_input_drop_tables_set(input),
-    HB_TAG('GSUB')
-  );
-  exports.hb_set_del(
-    exports.hb_subset_input_drop_tables_set(input),
-    HB_TAG('GPOS')
-  );
-  exports.hb_set_del(
-    exports.hb_subset_input_drop_tables_set(input),
-    HB_TAG('GDEF')
-  );
 
-  exports.hb_set_union(inputGlyphs, glyphs);
+  // Add unicodes indices
+  const inputUnicodes = exports.hb_subset_input_unicode_set(input);
+  [...text].forEach((c) => {
+    exports.hb_set_add(inputUnicodes, c.codePointAt(0));
+  });
+
+  // Enable GSUB/GPOS/GDEF subset, remove once it is enabled by upstream
+  const dropTables = exports.hb_subset_input_drop_tables_set(input);
+  exports.hb_set_del(dropTables, HB_TAG('GSUB'));
+  exports.hb_set_del(dropTables, HB_TAG('GPOS'));
+  exports.hb_set_del(dropTables, HB_TAG('GDEF'));
+
   const subset = exports.hb_subset(face, input);
 
   // Clean up
@@ -77,7 +68,7 @@ async function subsetFont(
 
   const offset = exports.hb_blob_get_data(result, 0);
   const subsetFont = Buffer.from(
-    heapu8.slice(offset, offset + exports.hb_blob_get_length(result))
+    heapu8.subarray(offset, offset + exports.hb_blob_get_length(result))
   );
 
   // Clean up
