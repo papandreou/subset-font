@@ -5,56 +5,50 @@ const { readFile } = require('fs').promises;
 const pathModule = require('path');
 
 describe('subset-font', function () {
-  before(async function () {
-    this.truetypeFont = await readFile(
-      pathModule.resolve(__dirname, '..', 'testdata', 'OpenSans.ttf')
-    );
-  });
-
   describe('with a truetype font', function () {
     before(async function () {
-      this.truetypeFontFont = await readFile(
+      this.sfntFont = await readFile(
         pathModule.resolve(__dirname, '..', 'testdata', 'OpenSans.ttf')
       );
     });
 
     describe('with no targetFormat given', function () {
       it('should return the subset as truetype', async function () {
-        const result = await subsetFont(this.truetypeFont, 'abcd');
+        const result = await subsetFont(this.sfntFont, 'abcd');
 
         expect(result, 'to be a', 'Buffer');
-        expect(result.length, 'to be less than', this.truetypeFont.length);
-        expect(fontverter.detectFormat(result), 'to equal', 'truetype');
+        expect(result.length, 'to be less than', this.sfntFont.length);
+        expect(fontverter.detectFormat(result), 'to equal', 'sfnt');
       });
     });
 
     it('should produce a subset as ttf', async function () {
-      const result = await subsetFont(this.truetypeFont, 'abcd', {
+      const result = await subsetFont(this.sfntFont, 'abcd', {
         targetFormat: 'truetype',
       });
 
       expect(result, 'to be a', 'Buffer');
-      expect(result.length, 'to be less than', this.truetypeFont.length);
-      expect(fontverter.detectFormat(result), 'to equal', 'truetype');
+      expect(result.length, 'to be less than', this.sfntFont.length);
+      expect(fontverter.detectFormat(result), 'to equal', 'sfnt');
     });
 
     it('should produce a subset as woff', async function () {
-      const result = await subsetFont(this.truetypeFont, 'abcd', {
+      const result = await subsetFont(this.sfntFont, 'abcd', {
         targetFormat: 'woff',
       });
 
       expect(result, 'to be a', 'Buffer');
-      expect(result.length, 'to be less than', this.truetypeFont.length);
+      expect(result.length, 'to be less than', this.sfntFont.length);
       expect(result.slice(0, 4).toString(), 'to equal', 'wOFF');
     });
 
     it('should produce a subset as woff2', async function () {
-      const result = await subsetFont(this.truetypeFont, 'abcd', {
+      const result = await subsetFont(this.sfntFont, 'abcd', {
         targetFormat: 'woff2',
       });
 
       expect(result, 'to be a', 'Buffer');
-      expect(result.length, 'to be less than', this.truetypeFont.length);
+      expect(result.length, 'to be less than', this.sfntFont.length);
       expect(result.slice(0, 4).toString(), 'to equal', 'wOF2');
     });
   });
@@ -88,7 +82,7 @@ describe('subset-font', function () {
 
       expect(result, 'to be a', 'Buffer');
       expect(result.length, 'to be less than', this.woffFont.length);
-      expect(fontverter.detectFormat(result), 'to equal', 'truetype');
+      expect(fontverter.detectFormat(result), 'to equal', 'sfnt');
     });
 
     it('should produce a subset as woff', async function () {

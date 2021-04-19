@@ -4,7 +4,7 @@
   "description": "Create a subset of a TTF/WOFF/WOFF2 font using the wasm build of harfbuzz/hb-subset",
   "main": "index.js",
   "dependencies": {
-    "fontverter": "^1.0.0",
+    "fontverter": "^2.0.0",
     "harfbuzzjs": "^0.1.4",
     "p-limit": "^3.1.0"
   },
