@@ -1,3 +1,7 @@
+### v1.2.0 (2021-04-19)
+
+- [Call it sfnt instead of truetype](https://github.com/papandreou/subset-font/commit/bb581a20f44617f2fa32a73c92a6f3aba438b4e4) ([Andreas Lind](mailto:andreas.lind@workday.com))
+
 ### v1.1.3 (2021-04-15)
 
 #### Pull requests
