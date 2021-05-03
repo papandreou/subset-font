@@ -1,3 +1,7 @@
+### v1.2.2 (2021-05-03)
+
+- [#5](https://github.com/papandreou/subset-font/pull/5) Update harfbuzzjs version and remove manual layout subset enable ([Ebrahim Byagowi](mailto:ebrahim@gnu.org))
+
 ### v1.2.1 (2021-05-03)
 
 - [#4](https://github.com/papandreou/subset-font/pull/4) Simplify characters iteration ([ebraminio](mailto:ebrahim@gnu.org))
