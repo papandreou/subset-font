@@ -1,4 +1,8 @@
-### v1.2.0 (2021-04-19)
+### v1.2.1 (2021-05-03)
+
+- [#4](https://github.com/papandreou/subset-font/pull/4) Simplify characters iteration ([ebraminio](mailto:ebrahim@gnu.org))
+
+### v1.2.0 (2021-04-20)
 
 - [Call it sfnt instead of truetype](https://github.com/papandreou/subset-font/commit/bb581a20f44617f2fa32a73c92a6f3aba438b4e4) ([Andreas Lind](mailto:andreas.lind@workday.com))
 
