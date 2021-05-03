@@ -3,12 +3,6 @@ const { readFile } = require('fs').promises;
 const _ = require('lodash');
 const fontverter = require('fontverter');
 
-function HB_TAG(chunkName) {
-  return chunkName.split('').reduce(function (a, ch) {
-    return (a << 8) + ch.charCodeAt(0);
-  }, 0);
-}
-
 const loadAndInitializeHarfbuzz = _.once(async () => {
   const {
     instance: { exports },
@@ -51,12 +45,6 @@ async function subsetFont(
   for (const c of text) {
     exports.hb_set_add(inputUnicodes, c.codePointAt(0));
   }
-
-  // Enable GSUB/GPOS/GDEF subset, remove once it is enabled by upstream
-  const dropTables = exports.hb_subset_input_drop_tables_set(input);
-  exports.hb_set_del(dropTables, HB_TAG('GSUB'));
-  exports.hb_set_del(dropTables, HB_TAG('GPOS'));
-  exports.hb_set_del(dropTables, HB_TAG('GDEF'));
 
   const subset = exports.hb_subset(face, input);
 
