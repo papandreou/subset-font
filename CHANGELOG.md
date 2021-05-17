@@ -1,3 +1,7 @@
+### v1.2.3 (2021-05-17)
+
+- [Increase the WebAssembly heap size to accommodate larger fonts](https://github.com/papandreou/subset-font/commit/3dfc48a77264673668e34000877082819c37ce75) ([Andreas Lind](mailto:andreas.lind@workday.com))
+
 ### v1.2.2 (2021-05-03)
 
 - [#5](https://github.com/papandreou/subset-font/pull/5) Update harfbuzzjs version and remove manual layout subset enable ([Ebrahim Byagowi](mailto:ebrahim@gnu.org))
