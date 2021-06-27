@@ -18,7 +18,7 @@ const loadAndInitializeHarfbuzz = _.once(async () => {
 async function subsetFont(
   originalFont,
   text,
-  { targetFormat = fontverter.detectFormat(originalFont) } = {}
+  { targetFormat = fontverter.detectFormat(originalFont), preserveNameIds } = {}
 ) {
   const [exports, heapu8] = await loadAndInitializeHarfbuzz();
 
@@ -39,6 +39,13 @@ async function subsetFont(
   exports.hb_blob_destroy(blob);
 
   const input = exports.hb_subset_input_create_or_fail();
+
+  if (preserveNameIds) {
+    const inputNameIds = exports.hb_subset_input_nameid_set(input);
+    for (const nameId of preserveNameIds) {
+      exports.hb_set_add(inputNameIds, nameId);
+    }
+  }
 
   // Add unicodes indices
   const inputUnicodes = exports.hb_subset_input_unicode_set(input);
