@@ -1,26 +1,15 @@
-const childProcess = require('child_process');
-const getTemporaryFilePath = require('gettemporaryfilepath');
-const fs = require('fs').promises;
-
+const fontkit = require('fontkit');
 const expect = require('unexpected')
   .clone()
   .addAssertion(
-    '<Buffer> [not] to have name id <number>',
-    async (expect, fontBuffer, nameId) => {
-      const outputFile = getTemporaryFilePath({ suffix: '.ttf' });
-      await fs.writeFile(outputFile, fontBuffer);
-      const xmlBuffer = childProcess.execSync(`ttx -t name -o - ${outputFile}`);
-      const nameRecords = require('fast-xml-parser').parse(
-        xmlBuffer.toString(),
-        {
-          ignoreAttributes: false,
-          parseAttributeValue: true,
-        }
-      ).ttFont.name.namerecord;
+    '<Buffer> [not] to include name field <string>',
+    async (expect, fontBuffer, fieldName) => {
       expect.errorMode = 'nested';
-      expect(nameRecords, '[not] to have an item satisfying', {
-        '@_nameID': nameId,
-      });
+      expect(
+        fontkit.create(fontBuffer).name.records,
+        '[not] to have property',
+        fieldName
+      );
     }
   );
 const subsetFont = require('..');
@@ -79,7 +68,7 @@ describe('subset-font', function () {
     describe('when not preserving any name ids', function () {
       it('should not preserve name id 14', async function () {
         const result = await subsetFont(this.sfntFont, 'abcd');
-        await expect(result, 'not to have name id', 14);
+        await expect(result, 'not to include name field', 'licenseURL');
       });
     });
 
@@ -91,7 +80,7 @@ describe('subset-font', function () {
       });
 
       it('should preserve name id 14', async function () {
-        await expect(this.result, 'to have name id', 14);
+        await expect(this.result, 'to include name field', 'licenseURL');
       });
     });
   });
