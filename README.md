@@ -24,6 +24,7 @@ Returns a promise that gets fulfilled with the subset font as a Buffer instance,
 Options:
 
 - `targetFormat` - the format to output, can be either `'sfnt'`, `'woff'`, or `'woff2'`.
+- `preserveNameIds` - an array of numbers specifying the extra name ids to preserve in the `name` table. By default the harfbuzz subsetter drops most of these. Use case described [here](https://github.com/papandreou/subset-font/issues/7).
 
 For backwards compatibility reasons, `'truetype'` is supported as an alias for `'sfnt'`.
 
