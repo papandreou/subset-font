@@ -1,3 +1,9 @@
+### v1.3.0 (2021-07-01)
+
+- [Mention the preserveNameIds option in the README](https://github.com/papandreou/subset-font/commit/ef2a8b2fddcc4f1245119a6eca010d3436375e4f) ([Andreas Lind](mailto:andreas.lind@workday.com))
+- [Use fontkit to look for the presence of a licenseURL in the tests, avoiding ttx](https://github.com/papandreou/subset-font/commit/4e97447a86d6b0f52cd510e7fa4c34e5fea856ef) ([Andreas Lind](mailto:andreas.lind@workday.com))
+- [Implement support for a preserveNameIds array](https://github.com/papandreou/subset-font/commit/00816d7821cd6bdaa01be909d93ec93c3f81fa36) ([Andreas Lind](mailto:andreas.lind@workday.com))
+
 ### v1.2.3 (2021-05-17)
 
 - [Increase the WebAssembly heap size to accommodate larger fonts](https://github.com/papandreou/subset-font/commit/3dfc48a77264673668e34000877082819c37ce75) ([Andreas Lind](mailto:andreas.lind@workday.com))
