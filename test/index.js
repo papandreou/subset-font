@@ -189,4 +189,23 @@ describe('subset-font', function () {
       expect(result.slice(0, 4).toString(), 'to equal', 'wOF2');
     });
   });
+
+  describe('stress test', function () {
+    it('should not break', async function () {
+      this.timeout(120 * 1000);
+
+      const woffFont = await readFile(
+        pathModule.resolve(
+          __dirname,
+          '..',
+          'testdata',
+          'k3k702ZOKiLJc3WVjuplzHhCUOGz7vYGh680lGh-uXM.woff'
+        )
+      );
+
+      await Promise.all(
+        new Array(10000).fill().map(() => subsetFont(woffFont, 'blabla'))
+      );
+    });
+  });
 });
