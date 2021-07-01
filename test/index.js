@@ -203,8 +203,33 @@ describe('subset-font', function () {
         )
       );
 
+      const ttfFont = await readFile(
+        pathModule.resolve(__dirname, '..', 'testdata', 'FZZJ-ZSXKJW.ttf')
+      );
+
       await Promise.all(
-        new Array(10000).fill().map(() => subsetFont(woffFont, 'blabla'))
+        new Array(1000).fill().flatMap(() => [
+          subsetFont(
+            woffFont,
+            `L💓遗憾、
+A    -   ！ི浮生ུ,
+心动😘柴宝贝🐕
+ᝰᖇⅇꫜડꫝⅈρⅈꪖꪫ꫁⁵²⁰゛农村范ルヾ2
+没有鱼丸？？？7
+中國知網·綽号小伙伴，志丶
+ᝰᖇⅇꫜડꫝⅈρⅈꪖꪫ꫁⁵²⁰゛农村范ルヾ2
+大ྂ孖ྂ峰回路转
+慕羡。久暖他心1
+壹花一世界🍃小妞༊྄ཻᏴ࿆Ꮻ࿆Ꭶ࿆Ꮥ࿆℡🌍1
+`,
+            { targetFormat: 'woff2' }
+          ),
+          subsetFont(
+            ttfFont,
+            `To:送你「难兄难弟纪念」心意卡，这是我送你的第张心意卡，一起继续加油鸭！`,
+            { targetFormat: 'woff2' }
+          ),
+        ])
       );
     });
   });
