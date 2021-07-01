@@ -20,6 +20,10 @@ async function subsetFont(
   text,
   { targetFormat = fontverter.detectFormat(originalFont), preserveNameIds } = {}
 ) {
+  if (typeof text !== 'string') {
+    throw new Error('The subset text must be given as a string');
+  }
+
   const [exports, heapu8] = await loadAndInitializeHarfbuzz();
 
   originalFont = await fontverter.convert(originalFont, 'truetype');

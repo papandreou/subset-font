@@ -25,6 +25,16 @@ describe('subset-font', function () {
       );
     });
 
+    describe('when not supplying the subset text as a string', function () {
+      it('should fail with an error', async function () {
+        await expect(
+          () => subsetFont(this.sfntFont, ['f', 'o', 'o']),
+          'to error with',
+          'The subset text must be given as a string'
+        );
+      });
+    });
+
     describe('with no targetFormat given', function () {
       it('should return the subset as truetype', async function () {
         const result = await subsetFont(this.sfntFont, 'abcd');
