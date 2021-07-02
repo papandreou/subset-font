@@ -202,9 +202,11 @@ describe('subset-font', function () {
 
   describe('with a truncated font', function () {
     before(async function () {
-      this.truncatedTtfFont = await readFile(
-        pathModule.resolve(__dirname, '..', 'testdata', 'FZZJ-ZSXKJW.ttf')
-      );
+      this.truncatedTtfFont = (
+        await readFile(
+          pathModule.resolve(__dirname, '..', 'testdata', 'FZZJ-ZSXKJW.ttf')
+        )
+      ).slice(0, 131072);
     });
 
     it('should error out', async function () {
