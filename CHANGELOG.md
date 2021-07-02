@@ -1,3 +1,13 @@
+### v1.3.2 (2021-07-02)
+
+#### Pull requests
+
+- [#9](https://github.com/papandreou/subset-font/pull/9) destroy hb\_face correctly ([alsotang](mailto:alsotang@gmail.com))
+
+#### Commits to master
+
+- [Truncate the now complete FZZJ-ZSXKJW.ttf in the test](https://github.com/papandreou/subset-font/commit/1b9d00675ad2d3001b99512e7193fd012284363e) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
 ### v1.3.1 (2021-07-02)
 
 - [Add vscode debugger launch config](https://github.com/papandreou/subset-font/commit/12b89ce1226a8622adca1acd4c29d8260f0ab8e2) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
