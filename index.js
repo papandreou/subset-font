@@ -66,8 +66,18 @@ async function subsetFont(
   const result = exports.hb_face_reference_blob(subset);
 
   const offset = exports.hb_blob_get_data(result, 0);
+  const subsetByteLength = exports.hb_blob_get_length(result);
+  if (subsetByteLength === 0) {
+    exports.hb_blob_destroy(result);
+    exports.hb_face_destroy(subset);
+    exports.free(fontBuffer);
+    throw new Error(
+      'Failed to create subset font, maybe the input file is corrupted?'
+    );
+  }
+
   const subsetFont = Buffer.from(
-    heapu8.subarray(offset, offset + exports.hb_blob_get_length(result))
+    heapu8.subarray(offset, offset + subsetByteLength)
   );
 
   // Clean up

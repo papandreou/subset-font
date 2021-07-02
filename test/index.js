@@ -199,4 +199,22 @@ describe('subset-font', function () {
       expect(result.slice(0, 4).toString(), 'to equal', 'wOF2');
     });
   });
+
+  describe('with a truncated font', function () {
+    before(async function () {
+      this.truncatedTtfFont = await readFile(
+        pathModule.resolve(__dirname, '..', 'testdata', 'FZZJ-ZSXKJW.ttf')
+      );
+    });
+
+    it('should error out', async function () {
+      await expect(
+        subsetFont(this.truncatedTtfFont, 'abcd', {
+          targetFormat: 'woff',
+        }),
+        'to be rejected with',
+        'Failed to create subset font, maybe the input file is corrupted?'
+      );
+    });
+  });
 });
