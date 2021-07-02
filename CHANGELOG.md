@@ -1,3 +1,9 @@
+### v1.3.1 (2021-07-02)
+
+- [Add vscode debugger launch config](https://github.com/papandreou/subset-font/commit/12b89ce1226a8622adca1acd4c29d8260f0ab8e2) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [Add a small bit of error handling, copied from hb-subset](https://github.com/papandreou/subset-font/commit/72b5b99c2190d9b81d5eb99a69f086e3a436d9b0) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [Error out if the text isn't given as a string](https://github.com/papandreou/subset-font/commit/f4a5297780289e69a695cbd3158eff667ec7b971) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
 ### v1.3.0 (2021-07-01)
 
 - [Mention the preserveNameIds option in the README](https://github.com/papandreou/subset-font/commit/ef2a8b2fddcc4f1245119a6eca010d3436375e4f) ([Andreas Lind](mailto:andreas.lind@workday.com))
