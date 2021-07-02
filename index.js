@@ -70,6 +70,7 @@ async function subsetFont(
   if (subsetByteLength === 0) {
     exports.hb_blob_destroy(result);
     exports.hb_face_destroy(subset);
+    exports.hb_face_destroy(face);
     exports.free(fontBuffer);
     throw new Error(
       'Failed to create subset font, maybe the input file is corrupted?'
@@ -83,6 +84,7 @@ async function subsetFont(
   // Clean up
   exports.hb_blob_destroy(result);
   exports.hb_face_destroy(subset);
+  exports.hb_face_destroy(face);
   exports.free(fontBuffer);
 
   return await fontverter.convert(subsetFont, targetFormat, 'truetype');
