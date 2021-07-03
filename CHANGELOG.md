@@ -1,3 +1,7 @@
+### v1.3.3 (2021-07-03)
+
+- [#10](https://github.com/papandreou/subset-font/pull/10) declare lodash as a prod dep ([alsotang](mailto:alsotang@gmail.com))
+
 ### v1.3.2 (2021-07-02)
 
 #### Pull requests
