@@ -43,6 +43,11 @@ async function subsetFont(
   exports.hb_blob_destroy(blob);
 
   const input = exports.hb_subset_input_create_or_fail();
+  if (input === 0) {
+    throw new Error(
+      'hb_subset_input_create_or_fail (harfbuzz) returned zero, indicating failure'
+    );
+  }
 
   if (preserveNameIds) {
     const inputNameIds = exports.hb_subset_input_set(
@@ -60,10 +65,18 @@ async function subsetFont(
     exports.hb_set_add(inputUnicodes, c.codePointAt(0));
   }
 
-  const subset = exports.hb_subset_or_fail(face, input);
-
-  // Clean up
-  exports.hb_subset_input_destroy(input);
+  let subset;
+  try {
+    subset = exports.hb_subset_or_fail(face, input);
+    if (subset === 0) {
+      throw new Error(
+        'hb_subset_or_fail (harfbuzz) returned zero, indicating failure. Maybe the input file is corrupted?'
+      );
+    }
+  } finally {
+    // Clean up
+    exports.hb_subset_input_destroy(input);
+  }
 
   // Get result blob
   const result = exports.hb_face_reference_blob(subset);
