@@ -45,7 +45,10 @@ async function subsetFont(
   const input = exports.hb_subset_input_create_or_fail();
 
   if (preserveNameIds) {
-    const inputNameIds = exports.hb_subset_input_nameid_set(input);
+    const inputNameIds = exports.hb_subset_input_set(
+      input,
+      4 // HB_SUBSET_SETS_NAME_ID
+    );
     for (const nameId of preserveNameIds) {
       exports.hb_set_add(inputNameIds, nameId);
     }
@@ -57,7 +60,7 @@ async function subsetFont(
     exports.hb_set_add(inputUnicodes, c.codePointAt(0));
   }
 
-  const subset = exports.hb_subset(face, input);
+  const subset = exports.hb_subset_or_fail(face, input);
 
   // Clean up
   exports.hb_subset_input_destroy(input);
