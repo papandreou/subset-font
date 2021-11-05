@@ -28,6 +28,13 @@ async function subsetFont(
 
   originalFont = await fontverter.convert(originalFont, 'truetype');
 
+  const input = exports.hb_subset_input_create_or_fail();
+  if (input === 0) {
+    throw new Error(
+      'hb_subset_input_create_or_fail (harfbuzz) returned zero, indicating failure'
+    );
+  }
+
   const fontBuffer = exports.malloc(originalFont.byteLength);
   heapu8.set(new Uint8Array(originalFont), fontBuffer);
 
@@ -41,13 +48,6 @@ async function subsetFont(
   );
   const face = exports.hb_face_create(blob, 0);
   exports.hb_blob_destroy(blob);
-
-  const input = exports.hb_subset_input_create_or_fail();
-  if (input === 0) {
-    throw new Error(
-      'hb_subset_input_create_or_fail (harfbuzz) returned zero, indicating failure'
-    );
-  }
 
   if (preserveNameIds) {
     const inputNameIds = exports.hb_subset_input_set(
