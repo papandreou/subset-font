@@ -69,6 +69,8 @@ async function subsetFont(
   try {
     subset = exports.hb_subset_or_fail(face, input);
     if (subset === 0) {
+      exports.hb_face_destroy(face);
+      exports.free(fontBuffer);
       throw new Error(
         'hb_subset_or_fail (harfbuzz) returned zero, indicating failure. Maybe the input file is corrupted?'
       );
