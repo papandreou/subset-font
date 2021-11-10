@@ -49,6 +49,14 @@ async function subsetFont(
   const face = exports.hb_face_create(blob, 0);
   exports.hb_blob_destroy(blob);
 
+  // Do the equivalent of --font-features=*
+  const layoutFeatures = exports.hb_subset_input_set(
+    input,
+    6 // HB_SUBSET_SETS_LAYOUT_FEATURE_TAG
+  );
+  exports.hb_set_clear(layoutFeatures);
+  exports.hb_set_invert(layoutFeatures);
+
   if (preserveNameIds) {
     const inputNameIds = exports.hb_subset_input_set(
       input,
