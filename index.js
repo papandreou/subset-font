@@ -28,6 +28,13 @@ async function subsetFont(
 
   originalFont = await fontverter.convert(originalFont, 'truetype');
 
+  const input = exports.hb_subset_input_create_or_fail();
+  if (input === 0) {
+    throw new Error(
+      'hb_subset_input_create_or_fail (harfbuzz) returned zero, indicating failure'
+    );
+  }
+
   const fontBuffer = exports.malloc(originalFont.byteLength);
   heapu8.set(new Uint8Array(originalFont), fontBuffer);
 
@@ -42,10 +49,19 @@ async function subsetFont(
   const face = exports.hb_face_create(blob, 0);
   exports.hb_blob_destroy(blob);
 
-  const input = exports.hb_subset_input_create_or_fail();
+  // Do the equivalent of --font-features=*
+  const layoutFeatures = exports.hb_subset_input_set(
+    input,
+    6 // HB_SUBSET_SETS_LAYOUT_FEATURE_TAG
+  );
+  exports.hb_set_clear(layoutFeatures);
+  exports.hb_set_invert(layoutFeatures);
 
   if (preserveNameIds) {
-    const inputNameIds = exports.hb_subset_input_nameid_set(input);
+    const inputNameIds = exports.hb_subset_input_set(
+      input,
+      4 // HB_SUBSET_SETS_NAME_ID
+    );
     for (const nameId of preserveNameIds) {
       exports.hb_set_add(inputNameIds, nameId);
     }
@@ -57,10 +73,20 @@ async function subsetFont(
     exports.hb_set_add(inputUnicodes, c.codePointAt(0));
   }
 
-  const subset = exports.hb_subset(face, input);
-
-  // Clean up
-  exports.hb_subset_input_destroy(input);
+  let subset;
+  try {
+    subset = exports.hb_subset_or_fail(face, input);
+    if (subset === 0) {
+      exports.hb_face_destroy(face);
+      exports.free(fontBuffer);
+      throw new Error(
+        'hb_subset_or_fail (harfbuzz) returned zero, indicating failure. Maybe the input file is corrupted?'
+      );
+    }
+  } finally {
+    // Clean up
+    exports.hb_subset_input_destroy(input);
+  }
 
   // Get result blob
   const result = exports.hb_face_reference_blob(subset);

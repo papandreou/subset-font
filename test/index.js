@@ -215,7 +215,7 @@ describe('subset-font', function () {
           targetFormat: 'woff',
         }),
         'to be rejected with',
-        'Failed to create subset font, maybe the input file is corrupted?'
+        'hb_subset_or_fail (harfbuzz) returned zero, indicating failure. Maybe the input file is corrupted?'
       );
     });
   });
