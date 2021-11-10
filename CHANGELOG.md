@@ -1,4 +1,8 @@
-### v1.3.3 (2021-07-03)
+### v1.4.0 (2021-11-10)
+
+- [#13](https://github.com/papandreou/subset-font/pull/13) Update harfbuzzjs to ^0.2.0 \(harfbuzz 3.0.0\) ([Andreas Lind](mailto:andreas.lind@workday.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
+### v1.3.3 (2021-07-04)
 
 - [#10](https://github.com/papandreou/subset-font/pull/10) declare lodash as a prod dep ([alsotang](mailto:alsotang@gmail.com))
 
