@@ -71,7 +71,8 @@ async function subsetFont(
   const inputUnicodes = exports.hb_subset_input_unicode_set(input);
   for (let i = 0; i < text.length; i++) {
     let codepoint = text.codePointAt(i);
-    exports.hb_set_add(inputUnicodes, codepoint);
+    // Harbuzz seems to expect only the lowest 16 bits of the unicode codepoint
+    exports.hb_set_add(inputUnicodes, codepoint % 0x10000);
     if (codepoint > 0xffff) {
       // We're dealing with a UTF-16 surrogate pair
       i++;
