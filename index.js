@@ -69,8 +69,13 @@ async function subsetFont(
 
   // Add unicodes indices
   const inputUnicodes = exports.hb_subset_input_unicode_set(input);
-  for (const c of text) {
-    exports.hb_set_add(inputUnicodes, c.codePointAt(0));
+  for (let i = 0; i < text.length; i++) {
+    let codepoint = text.codePointAt(i);
+    exports.hb_set_add(inputUnicodes, codepoint);
+    if (codepoint > 0xffff) {
+      // We're dealing with a UTF-16 surrogate pair
+      i++;
+    }
   }
 
   let subset;
