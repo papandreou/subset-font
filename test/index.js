@@ -11,6 +11,17 @@ const expect = require('unexpected')
         fieldName
       );
     }
+  )
+  .addAssertion(
+    '<Buffer> [not] to include code point <number>',
+    async (expect, fontBuffer, codePoint) => {
+      expect.errorMode = 'nested';
+      expect(
+        fontkit.create(fontBuffer).characterSet,
+        '[not] to contain',
+        codePoint
+      );
+    }
   );
 const subsetFont = require('..');
 const fontverter = require('fontverter');
@@ -92,6 +103,15 @@ describe('subset-font', function () {
       it('should preserve name id 14', async function () {
         await expect(this.result, 'to include name field', 'licenseURL');
       });
+    });
+
+    // https://github.com/papandreou/subset-font/issues/15
+    it('should handle surrogate pairs', async function () {
+      const emojiFont = await readFile(
+        pathModule.resolve(__dirname, '..', 'testdata', 'emoji.ttf')
+      );
+      const result = await subsetFont(emojiFont, '\u{1d11e}'); // aka '\ud834\udd1e'
+      await expect(result, 'to include code point', 0x1d11e);
     });
   });
 
