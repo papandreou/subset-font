@@ -220,6 +220,28 @@ describe('subset-font', function () {
     });
   });
 
+  describe('with a huge OTF font', function () {
+    before(async function () {
+      this.hugeOtfFont = await readFile(
+        pathModule.resolve(
+          __dirname,
+          '..',
+          'testdata',
+          'SourceHanSerifCN-SemiBold.otf'
+        )
+      );
+    });
+
+    it('should not crash when subsetting', async function () {
+      const result = await subsetFont(this.hugeOtfFont, 'abcd');
+
+      expect(result, 'to be a', 'Buffer');
+      expect(result.length, 'to be less than', this.hugeOtfFont.length);
+      expect(result.slice(0, 4).toString(), 'to equal', 'OTTO');
+      await expect(result, 'to include code point', 'a'.charCodeAt(0));
+    });
+  });
+
   describe('with a truncated font', function () {
     before(async function () {
       this.truncatedTtfFont = (
