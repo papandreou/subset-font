@@ -1,3 +1,12 @@
+### v1.5.0 (2022-07-24)
+
+- [Update harfbuzzjs to ^0.3.0](https://github.com/papandreou/subset-font/commit/d38cb12bc204f63213c63a8e9217c64429379419) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [Remove the memory.grow hack now that harfbuzzjs uses Emscripten and automatically grows the heap](https://github.com/papandreou/subset-font/commit/0bf5d7ab7ab2df35e863a944ebf1d87f91f777b3) ([Andreas Lind](mailto:andreas.lind@workday.com))
+- [hb-subset.wasm moved to the root of the harfbuzzjs package](https://github.com/papandreou/subset-font/commit/72ff88a4479a3a23d0d0a29d3102c2fbb2aa0b7f) ([Andreas Lind](mailto:andreas.lind@workday.com))
+- [Add a regression test with a huge font from Munter\/subfont\#145](https://github.com/papandreou/subset-font/commit/8a4667271239f415f84ef48633e6ca13d3456eb2) ([Andreas Lind](mailto:andreas.lind@workday.com))
+- [Fix CHANGELOG generation in preversion script now that an npm env var changed](https://github.com/papandreou/subset-font/commit/66a7ae5586a3a26380805297abc31b1176a9bb9c) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [+1 more](https://github.com/papandreou/subset-font/compare/v1.4.0...v1.5.0)
+
 ### v1.4.0 (2021-11-10)
 
 - [#13](https://github.com/papandreou/subset-font/pull/13) Update harfbuzzjs to ^0.2.0 \(harfbuzz 3.0.0\) ([Andreas Lind](mailto:andreas.lind@workday.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com))
