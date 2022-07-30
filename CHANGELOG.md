@@ -1,3 +1,7 @@
+### v1.6.0 (2022-07-30)
+
+- [Don't limit to a concurrency of 1 now that harfbuzzjs auto-grows the wasm heap](https://github.com/papandreou/subset-font/commit/e09399546948a49cba9702fb29108b607b74bd7b) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
 ### v1.5.0 (2022-07-24)
 
 - [Update harfbuzzjs to ^0.3.0](https://github.com/papandreou/subset-font/commit/d38cb12bc204f63213c63a8e9217c64429379419) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
