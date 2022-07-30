@@ -6,7 +6,8 @@
   "dependencies": {
     "fontverter": "^2.0.0",
     "harfbuzzjs": "^0.3.0",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "p-limit": "^3.1.0"
   },
   "devDependencies": {
     "coveralls": "^3.0.2",
