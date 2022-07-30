@@ -14,7 +14,7 @@ const loadAndInitializeHarfbuzz = _.once(async () => {
   return [exports, heapu8];
 });
 
-async function subsetFont(
+module.exports = async function subsetFont(
   originalFont,
   text,
   { targetFormat = fontverter.detectFormat(originalFont), preserveNameIds } = {}
@@ -113,7 +113,4 @@ async function subsetFont(
   exports.free(fontBuffer);
 
   return await fontverter.convert(subsetFont, targetFormat, 'truetype');
-}
-
-const limiter = require('p-limit')(1);
-module.exports = (...args) => limiter(() => subsetFont(...args));
+};
