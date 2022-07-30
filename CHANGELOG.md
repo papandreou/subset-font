@@ -1,3 +1,7 @@
+### v1.6.1 (2022-07-30)
+
+- [Revert "Don't limit to a concurrency of 1 now that harfbuzzjs auto-grows the wasm heap"](https://github.com/papandreou/subset-font/commit/b5461276536239cf865122dae67b1fbdf067e1ae) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
 ### v1.6.0 (2022-07-30)
 
 - [Don't limit to a concurrency of 1 now that harfbuzzjs auto-grows the wasm heap](https://github.com/papandreou/subset-font/commit/e09399546948a49cba9702fb29108b607b74bd7b) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
