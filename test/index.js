@@ -22,6 +22,17 @@ const expect = require('unexpected')
         codePoint
       );
     }
+  )
+  .addAssertion(
+    '<Buffer> [not] to include chunks <string+>',
+    async (expect, fontBuffer, ...chunkNames) => {
+      expect.errorMode = 'nested';
+      expect(
+        Object.keys(fontkit.create(fontBuffer).directory.tables),
+        '[not] to contain ',
+        ...chunkNames
+      );
+    }
   );
 const subsetFont = require('..');
 const fontverter = require('fontverter');
@@ -259,6 +270,54 @@ describe('subset-font', function () {
         'to be rejected with',
         'hb_subset_or_fail (harfbuzz) returned zero, indicating failure. Maybe the input file is corrupted?'
       );
+    });
+  });
+
+  describe('when omitting or preserving tables from the subsetted font', function () {
+    beforeEach(async function () {
+      // This font file contains these tables:
+      //   Feat, GDEF, GPOS, GSUB, Glat, Gloc, OS/2, Silf, Sill, cmap, glyf, head, hhea, hmtx, loca, maxp, name, post
+      this.paduakBookFont = await readFile(
+        pathModule.resolve(
+          __dirname,
+          '..',
+          'testdata',
+          'PadaukBook-Regular.ttf'
+        )
+      );
+    });
+
+    describe('with default options', function () {
+      it('should include the (subsetted) standard tables used by web browsers', async function () {
+        const result = await subsetFont(this.paduakBookFont, 'abcd');
+
+        await expect(
+          result,
+          'to include chunks',
+          'GDEF',
+          'GPOS',
+          'GSUB',
+          'OS/2',
+          'cmap',
+          'glyf',
+          'head',
+          'hhea',
+          'hmtx',
+          'loca',
+          'maxp',
+          'name',
+          'post'
+        ).and(
+          'not to include chunks',
+          'DSIG',
+          'BASE',
+          'Feat',
+          'Glat',
+          'Gloc',
+          'Silf',
+          'Sill'
+        );
+      });
     });
   });
 });
