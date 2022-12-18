@@ -1,3 +1,7 @@
+### v1.7.1 (2022-12-18)
+
+- [Revert "Update harfbuzzjs to ^0.3.1"](https://github.com/papandreou/subset-font/commit/c3c5cb98fb11b137d3d8162128dd3a1789ecfca4) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
 ### v1.7.0 (2022-12-18)
 
 - [Update harfbuzzjs to ^0.3.1](https://github.com/papandreou/subset-font/commit/27a4863063e633d4bbc3d3339b5fc0cfcb61927b) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
