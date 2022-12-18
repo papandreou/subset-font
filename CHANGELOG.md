@@ -1,3 +1,8 @@
+### v1.7.0 (2022-12-18)
+
+- [Update harfbuzzjs to ^0.3.1](https://github.com/papandreou/subset-font/commit/27a4863063e633d4bbc3d3339b5fc0cfcb61927b) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [Test that we strip tables not required by web browsers](https://github.com/papandreou/subset-font/commit/e90889e7e5d3f3373c076399a523e87fd4c2e8c2) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
 ### v1.6.1 (2022-07-30)
 
 - [Revert "Don't limit to a concurrency of 1 now that harfbuzzjs auto-grows the wasm heap"](https://github.com/papandreou/subset-font/commit/b5461276536239cf865122dae67b1fbdf067e1ae) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
@@ -17,7 +22,7 @@
 
 ### v1.4.0 (2021-11-10)
 
-- [#13](https://github.com/papandreou/subset-font/pull/13) Update harfbuzzjs to ^0.2.0 \(harfbuzz 3.0.0\) ([Andreas Lind](mailto:andreas.lind@workday.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [#13](https://github.com/papandreou/subset-font/pull/13) Update harfbuzzjs to ^0.2.0 \(harfbuzz 3.0.0\) ([Andreas Lind](mailto:andreas.lind@workday.com), [Andreas Lind](mailto:andreas.lind@workday.com), [Andreas Lind](mailto:andreas.lind@workday.com), [Andreas Lind](mailto:andreas.lind@workday.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com))
 
 ### v1.3.3 (2021-07-04)
 
@@ -65,7 +70,7 @@
 
 #### Pull requests
 
-- [#2](https://github.com/papandreou/subset-font/pull/2) Fix a leak, handle non-BMP characters and performance tweaks ([Ebrahim Byagowi](mailto:ebrahim@gnu.org))
+- [#2](https://github.com/papandreou/subset-font/pull/2) Fix a leak, handle non-BMP characters and performance tweaks ([Ebrahim Byagowi](mailto:ebrahim@gnu.org), [Ebrahim Byagowi](mailto:ebrahim@gnu.org), [Ebrahim Byagowi](mailto:ebrahim@gnu.org), [Ebrahim Byagowi](mailto:ebrahim@gnu.org))
 
 #### Commits to master
 
