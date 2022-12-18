@@ -1,3 +1,9 @@
+### v2.0.0 (2022-12-18)
+
+- [Upgrade to Ubuntu 22.04](https://github.com/papandreou/subset-font/commit/0714132362ad499979dae4571aa03884d513cec1) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [Revert "Revert "Update harfbuzzjs to ^0.3.1""](https://github.com/papandreou/subset-font/commit/b526500cdbfbbfaab6bb68092b3db0fdd6f00d97) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [Drop node.js 10 and 12 support, add 16 and 18](https://github.com/papandreou/subset-font/commit/b276f036429681193b6b2b8f79478a9b7fab40ff) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
 ### v1.7.1 (2022-12-18)
 
 - [Revert "Update harfbuzzjs to ^0.3.1"](https://github.com/papandreou/subset-font/commit/c3c5cb98fb11b137d3d8162128dd3a1789ecfca4) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
