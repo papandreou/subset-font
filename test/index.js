@@ -320,4 +320,96 @@ describe('subset-font', function () {
       });
     });
   });
+
+  describe('with a variable font', function () {
+    beforeEach(async function () {
+      this.variableRobotoFont = await readFile(
+        pathModule.resolve(
+          __dirname,
+          '..',
+          'testdata',
+          'RobotoFlex-VariableFont_GRAD,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf'
+        )
+      );
+    });
+
+    describe('when not instancing the font using axis pinning', function () {
+      it('should include the original variation axes', async function () {
+        const result = await subsetFont(this.variableRobotoFont, 'abcd');
+
+        expect(fontkit.create(result).variationAxes, 'to satisfy', {
+          wght: { name: 'wght', min: 100, default: 400, max: 1000 },
+          wdth: { name: 'wdth', min: 25, default: 100, max: 151 },
+          opsz: { name: 'opsz', min: 8, default: 14, max: 144 },
+          GRAD: { name: 'GRAD', min: -200, default: 0, max: 150 },
+          slnt: { name: 'slnt', min: -10, default: 0, max: 0 },
+          XTRA: { name: 'XTRA', min: 323, default: 468, max: 603 },
+          XOPQ: { name: 'XOPQ', min: 27, default: 96, max: 175 },
+          YOPQ: { name: 'YOPQ', min: 25, default: 79, max: 135 },
+          YTLC: { name: 'YTLC', min: 416, default: 514, max: 570 },
+          YTUC: { name: 'YTUC', min: 528, default: 712, max: 760 },
+          YTAS: { name: 'YTAS', min: 649, default: 750, max: 854 },
+          YTDE: { name: 'YTDE', min: -305, default: -203, max: -98 },
+          YTFI: { name: 'YTFI', min: 560, default: 738, max: 788 },
+        });
+      });
+    });
+
+    describe('when instancing the font using axis pinning', function () {
+      describe('when pinning all the axes', function () {
+        it('should remove the variation axes from the font', async function () {
+          const result = await subsetFont(this.variableRobotoFont, 'abcd', {
+            variationAxes: {
+              wght: 200,
+              wdth: 120,
+              opsz: 80,
+              GRAD: -20,
+              slnt: -8,
+              XTRA: 502,
+              XOPQ: 101,
+              YOPQ: 79,
+              YTLC: 420,
+              YTUC: 600,
+              YTAS: 810,
+              YTDE: -90,
+              YTFI: 660,
+            },
+          });
+
+          expect(fontkit.create(result).variationAxes, 'to equal', {});
+
+          // When not instancing the subset font is about 29 KB
+          expect(result.length, 'to be less than', 4096);
+        });
+      });
+    });
+
+    describe('when pinning only some of the axes', function () {
+      it('should remove the pinned variation axes from the font', async function () {
+        const result = await subsetFont(this.variableRobotoFont, 'abcd', {
+          variationAxes: {
+            wght: 200,
+            wdth: 120,
+            opsz: 80,
+            XTRA: 502,
+            XOPQ: 101,
+            YOPQ: 79,
+            YTLC: 420,
+            YTUC: 600,
+            YTAS: 810,
+            YTDE: -90,
+            YTFI: 660,
+          },
+        });
+
+        expect(fontkit.create(result).variationAxes, 'to equal', {
+          GRAD: { name: 'GRAD', min: -200, default: 0, max: 150 },
+          slnt: { name: 'slnt', min: -10, default: 0, max: 0 },
+        });
+
+        // When not instancing the subset font is about 29 KB
+        expect(result.length, 'to be less than', 25000);
+      });
+    });
+  });
 });

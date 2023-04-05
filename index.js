@@ -14,10 +14,20 @@ const loadAndInitializeHarfbuzz = _.once(async () => {
   return [exports, heapu8];
 });
 
+function HB_TAG(str) {
+  return str.split('').reduce(function (a, ch) {
+    return (a << 8) + ch.charCodeAt(0);
+  }, 0);
+}
+
 async function subsetFont(
   originalFont,
   text,
-  { targetFormat = fontverter.detectFormat(originalFont), preserveNameIds } = {}
+  {
+    targetFormat = fontverter.detectFormat(originalFont),
+    preserveNameIds,
+    variationAxes,
+  } = {}
 ) {
   if (typeof text !== 'string') {
     throw new Error('The subset text must be given as a string');
@@ -70,6 +80,17 @@ async function subsetFont(
   const inputUnicodes = exports.hb_subset_input_unicode_set(input);
   for (const c of text) {
     exports.hb_set_add(inputUnicodes, c.codePointAt(0));
+  }
+
+  if (variationAxes) {
+    for (const [axisName, value] of Object.entries(variationAxes)) {
+      exports.hb_subset_input_pin_axis_location(
+        input,
+        face,
+        HB_TAG(axisName),
+        value
+      );
+    }
   }
 
   let subset;
