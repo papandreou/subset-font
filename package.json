@@ -54,5 +54,9 @@
   "bugs": {
     "url": "https://github.com/papandreou/subset-font/issues"
   },
-  "homepage": "https://github.com/papandreou/subset-font#readme"
+  "homepage": "https://github.com/papandreou/subset-font#readme",
+  "files": [
+    "index.js",
+    "*.md"
+  ]
 }
