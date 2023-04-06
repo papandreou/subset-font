@@ -1,3 +1,13 @@
+### v2.1.0 (2023-04-06)
+
+#### Pull requests
+
+- [#21](https://github.com/papandreou/subset-font/pull/21) Add support for instancing variable fonts \(pinning variation axes\) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
+#### Commits to master
+
+- [Update harfbuzzjs to ^0.3.2](https://github.com/papandreou/subset-font/commit/9fb043c2bba16ba26978c4c42a980c26a2f3f428) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
 ### v2.0.0 (2022-12-18)
 
 - [Upgrade to Ubuntu 22.04](https://github.com/papandreou/subset-font/commit/0714132362ad499979dae4571aa03884d513cec1) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
