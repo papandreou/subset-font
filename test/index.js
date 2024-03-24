@@ -408,6 +408,42 @@ describe('subset-font', function () {
         });
 
         // When not instancing the subset font is about 29 KB
+        expect(result.length, 'to be less than', 26000);
+      });
+    });
+
+    describe('when reducing the ranges of some variation axes', function () {
+      it('should perform a partial instancing', async function () {
+        const result = await subsetFont(this.variableRobotoFont, 'abcd', {
+          variationAxes: {
+            GRAD: { min: -50, max: 50, default: 25 },
+            slnt: { min: -9, max: 0 },
+            YTDE: { min: -100, max: -98 },
+            opsz: 14,
+            XTRA: 468,
+            XOPQ: 96,
+            YOPQ: 79,
+            YTLC: 514,
+            YTUC: 712,
+            YTAS: 750,
+            YTFI: 738,
+            // Leaving out wght and wdth so that the full variation space is preserved
+          },
+        });
+
+        expect(
+          fontkit.create(result).variationAxes,
+          'to exhaustively satisfy',
+          {
+            GRAD: { name: 'GRAD', min: -50, max: 50, default: 25 },
+            slnt: { name: 'slnt', min: -9, max: 0, default: 0 },
+            YTDE: { name: 'YTDE', min: -100, max: -98, default: -100 },
+            wght: { name: 'wght', min: 100, max: 1000, default: 400 },
+            wdth: { name: 'wdth', min: 25, max: 151, default: 100 },
+          }
+        );
+
+        // When not instancing the subset font is about 29 KB
         expect(result.length, 'to be less than', 25000);
       });
     });

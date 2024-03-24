@@ -84,12 +84,52 @@ async function subsetFont(
 
   if (variationAxes) {
     for (const [axisName, value] of Object.entries(variationAxes)) {
-      exports.hb_subset_input_pin_axis_location(
-        input,
-        face,
-        HB_TAG(axisName),
-        value
-      );
+      if (typeof value === 'number') {
+        // Simple case: Pin/instance the variation axis to a single value
+        if (
+          !exports.hb_subset_input_pin_axis_location(
+            input,
+            face,
+            HB_TAG(axisName),
+            value
+          )
+        ) {
+          exports.hb_face_destroy(face);
+          exports.free(fontBuffer);
+          throw new Error(
+            `hb_subset_input_pin_axis_location (harfbuzz) returned zero when pinning ${axisName} and a value of ${value}, indicating failure.`
+          );
+        }
+      } else if (value && typeof value === 'object') {
+        // Complex case: Reduce the variation space of the axis
+        if (
+          typeof value.min === 'undefined' ||
+          typeof value.max === 'undefined'
+        ) {
+          exports.hb_face_destroy(face);
+          exports.free(fontBuffer);
+          throw new Error(
+            `${axisName}: You must provide both a min and a max value when setting the axis range`
+          );
+        }
+        if (
+          !exports.hb_subset_input_set_axis_range(
+            input,
+            face,
+            HB_TAG(axisName),
+            value.min,
+            value.max,
+            // An explicit NaN makes harfbuzz use the existing default value, clamping to the new range if necessary
+            value.default ?? NaN
+          )
+        ) {
+          exports.hb_face_destroy(face);
+          exports.free(fontBuffer);
+          throw new Error(
+            `hb_subset_input_set_axis_range (harfbuzz) returned zero when setting the range of ${axisName} to [${value.min}; ${value.max}] and a default value of ${value.default}, indicating failure.`
+          );
+        }
+      }
     }
   }
 
