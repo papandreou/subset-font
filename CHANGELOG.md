@@ -1,3 +1,14 @@
+### v2.2.0 (2024-03-24)
+
+#### Pull requests
+
+- [#23](https://github.com/papandreou/subset-font/pull/23) Support reducing the variation space of individual axes \(partial instancing\) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
+#### Commits to master
+
+- [Update harfbuzzjs to ^0.3.4](https://github.com/papandreou/subset-font/commit/8118084717dea57bd2f01b99a49ed5554ac52bad) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [Exclude test and testdata from the npm package](https://github.com/papandreou/subset-font/commit/6fde19fb442a62081054a99e68452721f1678f4b) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
 ### v2.1.0 (2023-04-06)
 
 #### Pull requests
