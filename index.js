@@ -97,7 +97,7 @@ async function subsetFont(
           exports.hb_face_destroy(face);
           exports.free(fontBuffer);
           throw new Error(
-            `hb_subset_input_pin_axis_location (harfbuzz) returned zero when pinning ${axisName} and a value of ${value}, indicating failure.`
+            `hb_subset_input_pin_axis_location (harfbuzz) returned zero when pinning ${axisName} to ${value}, indicating failure. Maybe the axis does not exist in the font?`
           );
         }
       } else if (value && typeof value === 'object') {
@@ -126,7 +126,7 @@ async function subsetFont(
           exports.hb_face_destroy(face);
           exports.free(fontBuffer);
           throw new Error(
-            `hb_subset_input_set_axis_range (harfbuzz) returned zero when setting the range of ${axisName} to [${value.min}; ${value.max}] and a default value of ${value.default}, indicating failure.`
+            `hb_subset_input_set_axis_range (harfbuzz) returned zero when setting the range of ${axisName} to [${value.min}; ${value.max}] and a default value of ${value.default}, indicating failure. Maybe the axis does not exist in the font?`
           );
         }
       }

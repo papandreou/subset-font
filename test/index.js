@@ -446,6 +446,69 @@ describe('subset-font', function () {
         // When not instancing the subset font is about 29 KB
         expect(result.length, 'to be less than', 25000);
       });
+
+      describe('when leaving out a min value', function () {
+        it('should error', async function () {
+          await expect(
+            () =>
+              subsetFont(this.variableRobotoFont, 'abcd', {
+                variationAxes: {
+                  wght: { max: 300 },
+                },
+              }),
+            'to error',
+            'wght: You must provide both a min and a max value when setting the axis range'
+          );
+        });
+      });
+
+      describe('when leaving out a max value', function () {
+        it('should error', async function () {
+          await expect(
+            () =>
+              subsetFont(this.variableRobotoFont, 'abcd', {
+                variationAxes: {
+                  wght: { min: 300 },
+                },
+              }),
+            'to error',
+            'wght: You must provide both a min and a max value when setting the axis range'
+          );
+        });
+      });
+
+      describe('when pinning a non-existent axis', function () {
+        it('should error', async function () {
+          await expect(
+            () =>
+              subsetFont(this.variableRobotoFont, 'abcd', {
+                variationAxes: {
+                  foob: 123,
+                },
+              }),
+            'to error',
+            'hb_subset_input_pin_axis_location (harfbuzz) returned zero when pinning foob to 123, indicating failure. Maybe the axis does not exist in the font?'
+          );
+        });
+      });
+
+      describe('when reducing the variation space of a non-existent axis', function () {
+        it('should error', async function () {
+          await expect(
+            () =>
+              subsetFont(this.variableRobotoFont, 'abcd', {
+                variationAxes: {
+                  foob: {
+                    min: 123,
+                    max: 456,
+                  },
+                },
+              }),
+            'to error',
+            'hb_subset_input_set_axis_range (harfbuzz) returned zero when setting the range of foob to [123; 456] and a default value of undefined, indicating failure. Maybe the axis does not exist in the font?'
+          );
+        });
+      });
     });
   });
 });
