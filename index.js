@@ -27,6 +27,7 @@ async function subsetFont(
     targetFormat = fontverter.detectFormat(originalFont),
     preserveNameIds,
     variationAxes,
+    noLayoutClosure,
   } = {}
 ) {
   if (typeof text !== 'string') {
@@ -74,6 +75,13 @@ async function subsetFont(
     for (const nameId of preserveNameIds) {
       exports.hb_set_add(inputNameIds, nameId);
     }
+  }
+
+  if (noLayoutClosure) {
+    exports.hb_subset_input_set_flags(
+      input,
+      exports.hb_subset_input_get_flags(input) | 0x00000200 // HB_SUBSET_FLAGS_NO_LAYOUT_CLOSURE
+    );
   }
 
   // Add unicodes indices

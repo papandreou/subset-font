@@ -253,6 +253,51 @@ describe('subset-font', function () {
     });
   });
 
+  // https://github.com/papandreou/subset-font/issues/22
+  describe('with an icon font', function () {
+    before(async function () {
+      this.materialIconsFont = await readFile(
+        pathModule.resolve(
+          __dirname,
+          '..',
+          'testdata',
+          'MaterialIcons-Regular.ttf'
+        )
+      );
+    });
+
+    describe('without the noLayoutClosure flag', function () {
+      it('should retain more glyphs', async function () {
+        const result = await subsetFont(
+          this.materialIconsFont,
+          `_abcdefghijklmnopqrstuvwxyz0123456789${String.fromCodePoint(
+            0xe5c5,
+            0xe5c8
+          )}`
+        );
+
+        expect(result.length, 'to be greater than', 300000);
+      });
+    });
+
+    describe('with the noLayoutClosure flag', function () {
+      it('should retain more glyphs', async function () {
+        const result = await subsetFont(
+          this.materialIconsFont,
+          `_abcdefghijklmnopqrstuvwxyz0123456789${String.fromCodePoint(
+            0xe5c5,
+            0xe5c8
+          )}`,
+          {
+            noLayoutClosure: true,
+          }
+        );
+
+        expect(result.length, 'to be less than', 3000);
+      });
+    });
+  });
+
   describe('with a truncated font', function () {
     before(async function () {
       this.truncatedTtfFont = (
