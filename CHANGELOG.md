@@ -1,3 +1,7 @@
+### v2.3.0 (2024-03-25)
+
+- [Implement noLayoutClosure flag, closes \#22](https://github.com/papandreou/subset-font/commit/154077d5208029ceec9ee2258ab7f4ea40d0c0d9) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
 ### v2.2.0 (2024-03-24)
 
 #### Pull requests
