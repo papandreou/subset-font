@@ -5,13 +5,13 @@ const fontverter = require('fontverter');
 
 const loadAndInitializeHarfbuzz = _.once(async () => {
   const {
-    instance: { exports },
+    instance: { exports: harfbuzzJsWasm },
   } = await WebAssembly.instantiate(
     await readFile(require.resolve('harfbuzzjs/hb-subset.wasm'))
   );
 
-  const heapu8 = new Uint8Array(exports.memory.buffer);
-  return [exports, heapu8];
+  const heapu8 = new Uint8Array(harfbuzzJsWasm.memory.buffer);
+  return { harfbuzzJsWasm, heapu8 };
 });
 
 function HB_TAG(str) {
@@ -34,60 +34,60 @@ async function subsetFont(
     throw new Error('The subset text must be given as a string');
   }
 
-  const [exports, heapu8] = await loadAndInitializeHarfbuzz();
+  const { harfbuzzJsWasm, heapu8 } = await loadAndInitializeHarfbuzz();
 
   originalFont = await fontverter.convert(originalFont, 'truetype');
 
-  const input = exports.hb_subset_input_create_or_fail();
+  const input = harfbuzzJsWasm.hb_subset_input_create_or_fail();
   if (input === 0) {
     throw new Error(
       'hb_subset_input_create_or_fail (harfbuzz) returned zero, indicating failure'
     );
   }
 
-  const fontBuffer = exports.malloc(originalFont.byteLength);
+  const fontBuffer = harfbuzzJsWasm.malloc(originalFont.byteLength);
   heapu8.set(new Uint8Array(originalFont), fontBuffer);
 
   // Create the face
-  const blob = exports.hb_blob_create(
+  const blob = harfbuzzJsWasm.hb_blob_create(
     fontBuffer,
     originalFont.byteLength,
     2, // HB_MEMORY_MODE_WRITABLE
     0,
     0
   );
-  const face = exports.hb_face_create(blob, 0);
-  exports.hb_blob_destroy(blob);
+  const face = harfbuzzJsWasm.hb_face_create(blob, 0);
+  harfbuzzJsWasm.hb_blob_destroy(blob);
 
   // Do the equivalent of --font-features=*
-  const layoutFeatures = exports.hb_subset_input_set(
+  const layoutFeatures = harfbuzzJsWasm.hb_subset_input_set(
     input,
     6 // HB_SUBSET_SETS_LAYOUT_FEATURE_TAG
   );
-  exports.hb_set_clear(layoutFeatures);
-  exports.hb_set_invert(layoutFeatures);
+  harfbuzzJsWasm.hb_set_clear(layoutFeatures);
+  harfbuzzJsWasm.hb_set_invert(layoutFeatures);
 
   if (preserveNameIds) {
-    const inputNameIds = exports.hb_subset_input_set(
+    const inputNameIds = harfbuzzJsWasm.hb_subset_input_set(
       input,
       4 // HB_SUBSET_SETS_NAME_ID
     );
     for (const nameId of preserveNameIds) {
-      exports.hb_set_add(inputNameIds, nameId);
+      harfbuzzJsWasm.hb_set_add(inputNameIds, nameId);
     }
   }
 
   if (noLayoutClosure) {
-    exports.hb_subset_input_set_flags(
+    harfbuzzJsWasm.hb_subset_input_set_flags(
       input,
-      exports.hb_subset_input_get_flags(input) | 0x00000200 // HB_SUBSET_FLAGS_NO_LAYOUT_CLOSURE
+      harfbuzzJsWasm.hb_subset_input_get_flags(input) | 0x00000200 // HB_SUBSET_FLAGS_NO_LAYOUT_CLOSURE
     );
   }
 
   // Add unicodes indices
-  const inputUnicodes = exports.hb_subset_input_unicode_set(input);
+  const inputUnicodes = harfbuzzJsWasm.hb_subset_input_unicode_set(input);
   for (const c of text) {
-    exports.hb_set_add(inputUnicodes, c.codePointAt(0));
+    harfbuzzJsWasm.hb_set_add(inputUnicodes, c.codePointAt(0));
   }
 
   if (variationAxes) {
@@ -95,15 +95,15 @@ async function subsetFont(
       if (typeof value === 'number') {
         // Simple case: Pin/instance the variation axis to a single value
         if (
-          !exports.hb_subset_input_pin_axis_location(
+          !harfbuzzJsWasm.hb_subset_input_pin_axis_location(
             input,
             face,
             HB_TAG(axisName),
             value
           )
         ) {
-          exports.hb_face_destroy(face);
-          exports.free(fontBuffer);
+          harfbuzzJsWasm.hb_face_destroy(face);
+          harfbuzzJsWasm.free(fontBuffer);
           throw new Error(
             `hb_subset_input_pin_axis_location (harfbuzz) returned zero when pinning ${axisName} to ${value}, indicating failure. Maybe the axis does not exist in the font?`
           );
@@ -114,14 +114,14 @@ async function subsetFont(
           typeof value.min === 'undefined' ||
           typeof value.max === 'undefined'
         ) {
-          exports.hb_face_destroy(face);
-          exports.free(fontBuffer);
+          harfbuzzJsWasm.hb_face_destroy(face);
+          harfbuzzJsWasm.free(fontBuffer);
           throw new Error(
             `${axisName}: You must provide both a min and a max value when setting the axis range`
           );
         }
         if (
-          !exports.hb_subset_input_set_axis_range(
+          !harfbuzzJsWasm.hb_subset_input_set_axis_range(
             input,
             face,
             HB_TAG(axisName),
@@ -131,8 +131,8 @@ async function subsetFont(
             value.default ?? NaN
           )
         ) {
-          exports.hb_face_destroy(face);
-          exports.free(fontBuffer);
+          harfbuzzJsWasm.hb_face_destroy(face);
+          harfbuzzJsWasm.free(fontBuffer);
           throw new Error(
             `hb_subset_input_set_axis_range (harfbuzz) returned zero when setting the range of ${axisName} to [${value.min}; ${value.max}] and a default value of ${value.default}, indicating failure. Maybe the axis does not exist in the font?`
           );
@@ -143,29 +143,29 @@ async function subsetFont(
 
   let subset;
   try {
-    subset = exports.hb_subset_or_fail(face, input);
+    subset = harfbuzzJsWasm.hb_subset_or_fail(face, input);
     if (subset === 0) {
-      exports.hb_face_destroy(face);
-      exports.free(fontBuffer);
+      harfbuzzJsWasm.hb_face_destroy(face);
+      harfbuzzJsWasm.free(fontBuffer);
       throw new Error(
         'hb_subset_or_fail (harfbuzz) returned zero, indicating failure. Maybe the input file is corrupted?'
       );
     }
   } finally {
     // Clean up
-    exports.hb_subset_input_destroy(input);
+    harfbuzzJsWasm.hb_subset_input_destroy(input);
   }
 
   // Get result blob
-  const result = exports.hb_face_reference_blob(subset);
+  const result = harfbuzzJsWasm.hb_face_reference_blob(subset);
 
-  const offset = exports.hb_blob_get_data(result, 0);
-  const subsetByteLength = exports.hb_blob_get_length(result);
+  const offset = harfbuzzJsWasm.hb_blob_get_data(result, 0);
+  const subsetByteLength = harfbuzzJsWasm.hb_blob_get_length(result);
   if (subsetByteLength === 0) {
-    exports.hb_blob_destroy(result);
-    exports.hb_face_destroy(subset);
-    exports.hb_face_destroy(face);
-    exports.free(fontBuffer);
+    harfbuzzJsWasm.hb_blob_destroy(result);
+    harfbuzzJsWasm.hb_face_destroy(subset);
+    harfbuzzJsWasm.hb_face_destroy(face);
+    harfbuzzJsWasm.free(fontBuffer);
     throw new Error(
       'Failed to create subset font, maybe the input file is corrupted?'
     );
@@ -176,10 +176,10 @@ async function subsetFont(
   );
 
   // Clean up
-  exports.hb_blob_destroy(result);
-  exports.hb_face_destroy(subset);
-  exports.hb_face_destroy(face);
-  exports.free(fontBuffer);
+  harfbuzzJsWasm.hb_blob_destroy(result);
+  harfbuzzJsWasm.hb_face_destroy(subset);
+  harfbuzzJsWasm.hb_face_destroy(face);
+  harfbuzzJsWasm.free(fontBuffer);
 
   return await fontverter.convert(subsetFont, targetFormat, 'truetype');
 }
