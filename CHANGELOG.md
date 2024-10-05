@@ -1,3 +1,9 @@
+### v2.4.0 (2024-10-05)
+
+- [Update harfbuzzjs to ^0.4.0](https://github.com/papandreou/subset-font/commit/c3b626ce3b2f9f83d8c3b2c618b3cc779bf28af2) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [Update harfbuzzjs to ^0.3.6](https://github.com/papandreou/subset-font/commit/3f711c8aa29a426c7f22655861abfb976950f527) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [Rename for clarity: exports =&gt; harfbuzzJsWasm](https://github.com/papandreou/subset-font/commit/62e2eb51a6509a37bf5cc326280244d324208aeb) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
 ### v2.3.0 (2024-03-25)
 
 - [Implement noLayoutClosure flag, closes \#22](https://github.com/papandreou/subset-font/commit/154077d5208029ceec9ee2258ab7f4ea40d0c0d9) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
