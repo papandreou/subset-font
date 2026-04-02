@@ -1,3 +1,7 @@
+### v2.5.0 (2026-04-02)
+
+- [Update harfbuzzjs to ^0.10.3](https://github.com/papandreou/subset-font/commit/b6de50b9932d65770691e67d824181994ddc2f68) ([Andreas Lind](mailto:andreas.lind@workday.com))
+
 ### v2.4.0 (2024-10-05)
 
 - [Update harfbuzzjs to ^0.4.0](https://github.com/papandreou/subset-font/commit/c3b626ce3b2f9f83d8c3b2c618b3cc779bf28af2) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
