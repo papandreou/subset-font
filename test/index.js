@@ -296,6 +296,16 @@ describe('subset-font', function () {
         expect(result.length, 'to be less than', 3000);
       });
     });
+
+    describe('with additional subset flags', function () {
+      it('should accept glyphNames options', async function () {
+        const result = await subsetFont(this.materialIconsFont, 'abc', {
+          glyphNames: true,
+        });
+
+        expect(result, 'to be a', 'Buffer');
+      });
+    });
   });
 
   describe('with a truncated font', function () {
