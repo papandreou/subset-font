@@ -14,6 +14,13 @@ const loadAndInitializeHarfbuzz = _.once(async () => {
   return { harfbuzzJsWasm, heapu8 };
 });
 
+const HB_MEMORY_MODE_WRITABLE = 2;
+const HB_SUBSET_SETS_DROP_TABLE_TAG = 3;
+const HB_SUBSET_SETS_NAME_ID = 4;
+const HB_SUBSET_SETS_LAYOUT_FEATURE_TAG = 6;
+const HB_SUBSET_FLAGS_NO_HINTING = 0x00000001;
+const HB_SUBSET_FLAGS_NO_LAYOUT_CLOSURE = 0x00000200;
+
 function HB_TAG(str) {
   return str.split('').reduce(function (a, ch) {
     return (a << 8) + ch.charCodeAt(0);
@@ -28,10 +35,20 @@ async function subsetFont(
     preserveNameIds,
     variationAxes,
     noLayoutClosure,
+    noHinting,
+    dropTables,
   } = {}
 ) {
   if (typeof text !== 'string') {
     throw new Error('The subset text must be given as a string');
+  }
+
+  if (
+    dropTables &&
+    (!Array.isArray(dropTables) ||
+      !dropTables.every((tag) => typeof tag === 'string' && tag.length === 4))
+  ) {
+    throw new Error('dropTables must be an array of four-character strings');
   }
 
   const { harfbuzzJsWasm, heapu8 } = await loadAndInitializeHarfbuzz();
@@ -52,7 +69,7 @@ async function subsetFont(
   const blob = harfbuzzJsWasm.hb_blob_create(
     fontBuffer,
     originalFont.byteLength,
-    2, // HB_MEMORY_MODE_WRITABLE
+    HB_MEMORY_MODE_WRITABLE,
     0,
     0
   );
@@ -62,7 +79,7 @@ async function subsetFont(
   // Do the equivalent of --font-features=*
   const layoutFeatures = harfbuzzJsWasm.hb_subset_input_set(
     input,
-    6 // HB_SUBSET_SETS_LAYOUT_FEATURE_TAG
+    HB_SUBSET_SETS_LAYOUT_FEATURE_TAG
   );
   harfbuzzJsWasm.hb_set_clear(layoutFeatures);
   harfbuzzJsWasm.hb_set_invert(layoutFeatures);
@@ -70,18 +87,32 @@ async function subsetFont(
   if (preserveNameIds) {
     const inputNameIds = harfbuzzJsWasm.hb_subset_input_set(
       input,
-      4 // HB_SUBSET_SETS_NAME_ID
+      HB_SUBSET_SETS_NAME_ID
     );
     for (const nameId of preserveNameIds) {
       harfbuzzJsWasm.hb_set_add(inputNameIds, nameId);
     }
   }
 
-  if (noLayoutClosure) {
-    harfbuzzJsWasm.hb_subset_input_set_flags(
+  if (noLayoutClosure || noHinting) {
+    let flags = harfbuzzJsWasm.hb_subset_input_get_flags(input);
+    if (noLayoutClosure) {
+      flags |= HB_SUBSET_FLAGS_NO_LAYOUT_CLOSURE;
+    }
+    if (noHinting) {
+      flags |= HB_SUBSET_FLAGS_NO_HINTING;
+    }
+    harfbuzzJsWasm.hb_subset_input_set_flags(input, flags);
+  }
+
+  if (dropTables) {
+    const inputDropTables = harfbuzzJsWasm.hb_subset_input_set(
       input,
-      harfbuzzJsWasm.hb_subset_input_get_flags(input) | 0x00000200 // HB_SUBSET_FLAGS_NO_LAYOUT_CLOSURE
+      HB_SUBSET_SETS_DROP_TABLE_TAG
     );
+    for (const tag of dropTables) {
+      harfbuzzJsWasm.hb_set_add(inputDropTables, HB_TAG(tag));
+    }
   }
 
   // Add unicodes indices
