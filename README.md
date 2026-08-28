@@ -51,6 +51,7 @@ Options:
 
 - `targetFormat` - the format to output, can be either `'sfnt'`, `'woff'`, or `'woff2'`.
 - `preserveNameIds` - an array of numbers specifying the extra name ids to preserve in the `name` table. By default the harfbuzz subsetter drops most of these. Use case described [here](https://github.com/papandreou/subset-font/issues/7).
+- `keepFeatures` - an array of four-character OpenType feature tags to retain, equivalent to `hb-subset --layout-features=<list>`. By default all layout features are retained. Pass an empty array to remove them all.
 - `variationAxes` - an object specifying a full or partial instancing of variation axes in the font. Only works with variable fonts. See the example above.
 - `noLayoutClosure` - don't perform glyph closure for layout substitution (GSUB). Equivalent to `hb-subset --no-layout-closure` and `pyftsubset --no-layout-closure`.
 

@@ -26,12 +26,26 @@ async function subsetFont(
   {
     targetFormat = fontverter.detectFormat(originalFont),
     preserveNameIds,
+    keepFeatures,
     variationAxes,
     noLayoutClosure,
   } = {}
 ) {
   if (typeof text !== 'string') {
     throw new Error('The subset text must be given as a string');
+  }
+
+  if (
+    keepFeatures !== undefined &&
+    (!Array.isArray(keepFeatures) ||
+      keepFeatures.some(
+        (feature) =>
+          typeof feature !== 'string' || !/^[\x20-\x7e]{4}$/.test(feature)
+      ))
+  ) {
+    throw new Error(
+      'keepFeatures must be an array of four-character OpenType feature tags'
+    );
   }
 
   const { harfbuzzJsWasm, heapu8 } = await loadAndInitializeHarfbuzz();
@@ -59,13 +73,19 @@ async function subsetFont(
   const face = harfbuzzJsWasm.hb_face_create(blob, 0);
   harfbuzzJsWasm.hb_blob_destroy(blob);
 
-  // Do the equivalent of --font-features=*
+  // Do the equivalent of --layout-features=*, unless an explicit allowlist was supplied.
   const layoutFeatures = harfbuzzJsWasm.hb_subset_input_set(
     input,
     6 // HB_SUBSET_SETS_LAYOUT_FEATURE_TAG
   );
   harfbuzzJsWasm.hb_set_clear(layoutFeatures);
-  harfbuzzJsWasm.hb_set_invert(layoutFeatures);
+  if (keepFeatures === undefined) {
+    harfbuzzJsWasm.hb_set_invert(layoutFeatures);
+  } else {
+    for (const feature of keepFeatures) {
+      harfbuzzJsWasm.hb_set_add(layoutFeatures, HB_TAG(feature));
+    }
+  }
 
   if (preserveNameIds) {
     const inputNameIds = harfbuzzJsWasm.hb_subset_input_set(
