@@ -1,3 +1,7 @@
+### v2.6.0 (2026-08-28)
+
+- [#30](https://github.com/papandreou/subset-font/pull/30) feat: add keepFeatures option for layout features ([Cesar S](mailto:rasec_1113@hotmail.com), [Cesar S](mailto:rasec_1113@hotmail.com))
+
 ### v2.5.0 (2026-04-02)
 
 - [Update harfbuzzjs to ^0.10.3](https://github.com/papandreou/subset-font/commit/b6de50b9932d65770691e67d824181994ddc2f68) ([Andreas Lind](mailto:andreas.lind@workday.com))
