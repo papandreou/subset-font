@@ -57,6 +57,41 @@ describe('subset-font', function () {
       });
     });
 
+    describe('when selecting layout features', function () {
+      it('should retain all layout features by default', async function () {
+        const result = await subsetFont(this.sfntFont, 'office');
+
+        expect(fontkit.create(result).availableFeatures, 'to equal', ['liga']);
+      });
+
+      it('should retain explicitly selected layout features', async function () {
+        const result = await subsetFont(this.sfntFont, 'office', {
+          keepFeatures: ['liga'],
+        });
+
+        expect(fontkit.create(result).availableFeatures, 'to equal', ['liga']);
+      });
+
+      it('should remove all layout features when given an empty array', async function () {
+        const result = await subsetFont(this.sfntFont, 'office', {
+          keepFeatures: [],
+        });
+
+        expect(fontkit.create(result).availableFeatures, 'to equal', []);
+      });
+
+      it('should reject invalid layout feature tags', async function () {
+        await expect(
+          () =>
+            subsetFont(this.sfntFont, 'office', {
+              keepFeatures: ['liga', 'invalid'],
+            }),
+          'to error',
+          'keepFeatures must be an array of four-character OpenType feature tags'
+        );
+      });
+    });
+
     describe('with no targetFormat given', function () {
       it('should return the subset as truetype', async function () {
         const result = await subsetFont(this.sfntFont, 'abcd');
@@ -376,6 +411,19 @@ describe('subset-font', function () {
           'RobotoFlex-VariableFont_GRAD,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf'
         )
       );
+    });
+
+    it('should retain only the selected layout features', async function () {
+      const result = await subsetFont(
+        this.variableRobotoFont,
+        'office 0123456789 AV abcdefghijklmnopqrstuvwxyz',
+        { keepFeatures: ['liga', 'kern'] }
+      );
+
+      expect(fontkit.create(result).availableFeatures, 'to equal', [
+        'liga',
+        'kern',
+      ]);
     });
 
     describe('when not instancing the font using axis pinning', function () {
