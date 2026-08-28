@@ -1,9 +1,18 @@
 /* global WebAssembly */
 const { readFile } = require('fs').promises;
-const _ = require('lodash');
 const fontverter = require('fontverter');
 
-const loadAndInitializeHarfbuzz = _.once(async () => {
+function once(fn) {
+  let result;
+  return (...args) => {
+    if (!result) {
+      result = { value: fn(...args) };
+    }
+    return result.value;
+  };
+}
+
+const loadAndInitializeHarfbuzz = once(async () => {
   const {
     instance: { exports: harfbuzzJsWasm },
   } = await WebAssembly.instantiate(
