@@ -1,3 +1,7 @@
+### v2.7.0 (2026-08-29)
+
+- [#29](https://github.com/papandreou/subset-font/pull/29) refactor: replace `lodash.once` with a local helper ([Daniel Roe](mailto:daniel@roe.dev))
+
 ### v2.6.0 (2026-08-28)
 
 - [#30](https://github.com/papandreou/subset-font/pull/30) feat: add keepFeatures option for layout features ([Cesar S](mailto:rasec_1113@hotmail.com), [Cesar S](mailto:rasec_1113@hotmail.com))
