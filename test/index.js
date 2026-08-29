@@ -151,6 +151,37 @@ describe('subset-font', function () {
       });
     });
 
+    describe('with the noHinting flag', function () {
+      it('should omit TrueType hinting tables', async function () {
+        const result = await subsetFont(this.sfntFont, 'abcd', {
+          noHinting: true,
+        });
+
+        await expect(result, 'not to include chunks', 'cvt ', 'fpgm', 'prep');
+      });
+    });
+
+    describe('when dropping tables', function () {
+      it('should omit the requested tables', async function () {
+        const result = await subsetFont(this.sfntFont, 'abcd', {
+          dropTables: ['gasp'],
+        });
+
+        await expect(result, 'not to include chunks', 'gasp');
+      });
+
+      it('should fail when a table tag is not four characters', async function () {
+        await expect(
+          () =>
+            subsetFont(this.sfntFont, 'abcd', {
+              dropTables: ['abc'],
+            }),
+          'to error with',
+          'dropTables must be an array of four-character strings'
+        );
+      });
+    });
+
     // https://github.com/papandreou/subset-font/issues/15
     it('should handle surrogate pairs', async function () {
       const emojiFont = await readFile(

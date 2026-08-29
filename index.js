@@ -23,6 +23,14 @@ const loadAndInitializeHarfbuzz = once(async () => {
   return { harfbuzzJsWasm, heapu8 };
 });
 
+const HB_MEMORY_MODE_WRITABLE = 2;
+const HB_SUBSET_SETS_DROP_TABLE_TAG = 3;
+const HB_SUBSET_SETS_NAME_ID = 4;
+const HB_SUBSET_SETS_LAYOUT_FEATURE_TAG = 6;
+const HB_SUBSET_FLAGS_NO_HINTING = 0x00000001;
+const HB_SUBSET_FLAGS_GLYPH_NAMES = 0x00000080;
+const HB_SUBSET_FLAGS_NO_LAYOUT_CLOSURE = 0x00000200;
+
 function HB_TAG(str) {
   return str.split('').reduce(function (a, ch) {
     return (a << 8) + ch.charCodeAt(0);
@@ -39,6 +47,8 @@ async function subsetFont(
     variationAxes,
     noLayoutClosure,
     glyphNames,
+    noHinting,
+    dropTables,
   } = {}
 ) {
   if (typeof text !== 'string') {
@@ -56,6 +66,14 @@ async function subsetFont(
     throw new Error(
       'keepFeatures must be an array of four-character OpenType feature tags'
     );
+  }
+
+  if (
+    dropTables &&
+    (!Array.isArray(dropTables) ||
+      !dropTables.every((tag) => typeof tag === 'string' && tag.length === 4))
+  ) {
+    throw new Error('dropTables must be an array of four-character strings');
   }
 
   const { harfbuzzJsWasm, heapu8 } = await loadAndInitializeHarfbuzz();
@@ -76,7 +94,7 @@ async function subsetFont(
   const blob = harfbuzzJsWasm.hb_blob_create(
     fontBuffer,
     originalFont.byteLength,
-    2, // HB_MEMORY_MODE_WRITABLE
+    HB_MEMORY_MODE_WRITABLE,
     0,
     0
   );
@@ -86,7 +104,7 @@ async function subsetFont(
   // Do the equivalent of --layout-features=*, unless an explicit allowlist was supplied.
   const layoutFeatures = harfbuzzJsWasm.hb_subset_input_set(
     input,
-    6 // HB_SUBSET_SETS_LAYOUT_FEATURE_TAG
+    HB_SUBSET_SETS_LAYOUT_FEATURE_TAG
   );
   harfbuzzJsWasm.hb_set_clear(layoutFeatures);
   if (keepFeatures === undefined) {
@@ -100,22 +118,37 @@ async function subsetFont(
   if (preserveNameIds) {
     const inputNameIds = harfbuzzJsWasm.hb_subset_input_set(
       input,
-      4 // HB_SUBSET_SETS_NAME_ID
+      HB_SUBSET_SETS_NAME_ID
     );
     for (const nameId of preserveNameIds) {
       harfbuzzJsWasm.hb_set_add(inputNameIds, nameId);
     }
   }
 
-  let flags = harfbuzzJsWasm.hb_subset_input_get_flags(input);
-  if (noLayoutClosure) {
-    flags |= 0x00000200; // HB_SUBSET_FLAGS_NO_LAYOUT_CLOSURE
+  if (noLayoutClosure || noHinting || glyphNames) {
+    let flags = harfbuzzJsWasm.hb_subset_input_get_flags(input);
+    if (noLayoutClosure) {
+      flags |= HB_SUBSET_FLAGS_NO_LAYOUT_CLOSURE;
+    }
+    if (noHinting) {
+      flags |= HB_SUBSET_FLAGS_NO_HINTING;
+    }
+    if (glyphNames) {
+      flags |= HB_SUBSET_FLAGS_GLYPH_NAMES;
+    }
+    if (flags !== harfbuzzJsWasm.hb_subset_input_get_flags(input)) {
+      harfbuzzJsWasm.hb_subset_input_set_flags(input, flags);
+    }
   }
-  if (glyphNames) {
-    flags |= 0x00000080; // HB_SUBSET_FLAGS_GLYPH_NAMES
-  }
-  if (flags !== harfbuzzJsWasm.hb_subset_input_get_flags(input)) {
-    harfbuzzJsWasm.hb_subset_input_set_flags(input, flags);
+
+  if (dropTables) {
+    const inputDropTables = harfbuzzJsWasm.hb_subset_input_set(
+      input,
+      HB_SUBSET_SETS_DROP_TABLE_TAG
+    );
+    for (const tag of dropTables) {
+      harfbuzzJsWasm.hb_set_add(inputDropTables, HB_TAG(tag));
+    }
   }
 
   // Add unicodes indices

@@ -55,6 +55,8 @@ Options:
 - `variationAxes` - an object specifying a full or partial instancing of variation axes in the font. Only works with variable fonts. See the example above.
 - `noLayoutClosure` - don't perform glyph closure for layout substitution (GSUB). Equivalent to `hb-subset --no-layout-closure` and `pyftsubset --no-layout-closure`.
 - `glyphNames` - keep PostScript glyph names in the output subset. Equivalent to `hb-subset --glyph-names`.
+- `noHinting` - drop hinting instructions from the subset. Equivalent to `hb-subset --no-hinting`.
+- `dropTables` - an array of four-character SFNT table tags to drop from the subset, such as `['gasp']`.
 
 For backwards compatibility reasons, `'truetype'` is supported as an alias for `'sfnt'`.
 
