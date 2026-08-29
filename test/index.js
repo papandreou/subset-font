@@ -212,6 +212,16 @@ describe('subset-font', function () {
       expect(result.length, 'to be less than', this.woffFont.length);
       expect(result.slice(0, 4).toString(), 'to equal', 'wOF2');
     });
+
+    describe('with glyphNames:true', function () {
+      it('should include glyph names', async function () {
+        const result = await subsetFont(this.woffFont, 'abc123', {
+          glyphNames: true,
+        });
+
+        expect(fontkit.create(result).getGlyph(1).name, 'to equal', 'one');
+      });
+    });
   });
 
   describe('with a woff2 font', function () {

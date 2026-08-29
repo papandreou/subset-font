@@ -38,6 +38,7 @@ async function subsetFont(
     keepFeatures,
     variationAxes,
     noLayoutClosure,
+    glyphNames,
   } = {}
 ) {
   if (typeof text !== 'string') {
@@ -106,11 +107,15 @@ async function subsetFont(
     }
   }
 
+  let flags = harfbuzzJsWasm.hb_subset_input_get_flags(input);
   if (noLayoutClosure) {
-    harfbuzzJsWasm.hb_subset_input_set_flags(
-      input,
-      harfbuzzJsWasm.hb_subset_input_get_flags(input) | 0x00000200 // HB_SUBSET_FLAGS_NO_LAYOUT_CLOSURE
-    );
+    flags |= 0x00000200; // HB_SUBSET_FLAGS_NO_LAYOUT_CLOSURE
+  }
+  if (glyphNames) {
+    flags |= 0x00000080; // HB_SUBSET_FLAGS_GLYPH_NAMES
+  }
+  if (flags !== harfbuzzJsWasm.hb_subset_input_get_flags(input)) {
+    harfbuzzJsWasm.hb_subset_input_set_flags(input, flags);
   }
 
   // Add unicodes indices

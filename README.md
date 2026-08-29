@@ -54,6 +54,7 @@ Options:
 - `keepFeatures` - an array of four-character OpenType feature tags to retain, equivalent to `hb-subset --layout-features=<list>`. By default all layout features are retained. Pass an empty array to remove them all.
 - `variationAxes` - an object specifying a full or partial instancing of variation axes in the font. Only works with variable fonts. See the example above.
 - `noLayoutClosure` - don't perform glyph closure for layout substitution (GSUB). Equivalent to `hb-subset --no-layout-closure` and `pyftsubset --no-layout-closure`.
+- `glyphNames` - keep PostScript glyph names in the output subset. Equivalent to `hb-subset --glyph-names`.
 
 For backwards compatibility reasons, `'truetype'` is supported as an alias for `'sfnt'`.
 
