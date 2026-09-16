@@ -39,6 +39,22 @@ const subsetBuffer = await subsetFont(mySfntFontBuffer, 'Hello, world!', {
 });
 ```
 
+## Instancing without subsetting
+
+```js
+const subsetFont = require('subset-font');
+
+const mySfntFontBuffer = Buffer.from(/*...*/);
+
+// Pin the wght axis to 200, but keep every glyph in the font:
+const instancedBuffer = await subsetFont(mySfntFontBuffer, undefined, {
+  keepAllGlyphs: true,
+  variationAxes: {
+    wght: 200,
+  },
+});
+```
+
 ## API
 
 #### `subsetFont(buffer, text, options): Promise<Buffer>`
@@ -53,6 +69,7 @@ Options:
 - `preserveNameIds` - an array of numbers specifying the extra name ids to preserve in the `name` table. By default the harfbuzz subsetter drops most of these. Use case described [here](https://github.com/papandreou/subset-font/issues/7).
 - `keepFeatures` - an array of four-character OpenType feature tags to retain, equivalent to `hb-subset --layout-features=<list>`. By default all layout features are retained. Pass an empty array to remove them all.
 - `variationAxes` - an object specifying a full or partial instancing of variation axes in the font. Only works with variable fonts. See the example above.
+- `keepAllGlyphs` - retain every glyph in the font instead of subsetting. Equivalent to `hb-subset --gids=*`. The `text` argument must be omitted, `null`, or the empty string when this is enabled. Useful for instancing variation axes without reducing the character set. Note that this is still a subsetting pass, so the font gets re-encoded and the `name` table is trimmed as usual (see `preserveNameIds`); it is not a way to copy a font unchanged.
 - `noLayoutClosure` - don't perform glyph closure for layout substitution (GSUB). Equivalent to `hb-subset --no-layout-closure` and `pyftsubset --no-layout-closure`.
 - `glyphNames` - keep PostScript glyph names in the output subset. Equivalent to `hb-subset --glyph-names`.
 - `noHinting` - drop hinting instructions from the subset. Equivalent to `hb-subset --no-hinting`.

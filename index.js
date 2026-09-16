@@ -49,9 +49,16 @@ async function subsetFont(
     glyphNames,
     noHinting,
     dropTables,
+    keepAllGlyphs = false,
   } = {}
 ) {
-  if (typeof text !== 'string') {
+  if (keepAllGlyphs) {
+    if (text !== undefined && text !== null && text !== '') {
+      throw new Error(
+        'The subset text must not be given when keepAllGlyphs is true'
+      );
+    }
+  } else if (typeof text !== 'string') {
     throw new Error('The subset text must be given as a string');
   }
 
@@ -153,8 +160,14 @@ async function subsetFont(
 
   // Add unicodes indices
   const inputUnicodes = harfbuzzJsWasm.hb_subset_input_unicode_set(input);
-  for (const c of text) {
-    harfbuzzJsWasm.hb_set_add(inputUnicodes, c.codePointAt(0));
+  if (keepAllGlyphs) {
+    // Do the equivalent of --gids=*
+    harfbuzzJsWasm.hb_set_clear(inputUnicodes);
+    harfbuzzJsWasm.hb_set_invert(inputUnicodes);
+  } else {
+    for (const c of text) {
+      harfbuzzJsWasm.hb_set_add(inputUnicodes, c.codePointAt(0));
+    }
   }
 
   if (variationAxes) {
