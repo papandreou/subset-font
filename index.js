@@ -16,11 +16,12 @@ const loadAndInitializeHarfbuzz = once(async () => {
   const {
     instance: { exports: harfbuzzJsWasm },
   } = await WebAssembly.instantiate(
-    await readFile(require.resolve('harfbuzzjs/hb-subset.wasm'))
+    await readFile(require.resolve('harfbuzzjs/dist/harfbuzz-subset.wasm'))
   );
 
-  const heapu8 = new Uint8Array(harfbuzzJsWasm.memory.buffer);
-  return { harfbuzzJsWasm, heapu8 };
+  harfbuzzJsWasm._initialize();
+
+  return harfbuzzJsWasm;
 });
 
 const HB_MEMORY_MODE_WRITABLE = 2;
@@ -83,7 +84,11 @@ async function subsetFont(
     throw new Error('dropTables must be an array of four-character strings');
   }
 
-  const { harfbuzzJsWasm, heapu8 } = await loadAndInitializeHarfbuzz();
+  const harfbuzzJsWasm = await loadAndInitializeHarfbuzz();
+
+  // The wasm memory can grow while subsetting, which detaches any previously
+  // created view, so take a fresh one at each point of use.
+  const heapu8 = () => new Uint8Array(harfbuzzJsWasm.memory.buffer);
 
   originalFont = await fontverter.convert(originalFont, 'truetype');
 
@@ -95,7 +100,7 @@ async function subsetFont(
   }
 
   const fontBuffer = harfbuzzJsWasm.malloc(originalFont.byteLength);
-  heapu8.set(new Uint8Array(originalFont), fontBuffer);
+  heapu8().set(new Uint8Array(originalFont), fontBuffer);
 
   // Create the face
   const blob = harfbuzzJsWasm.hb_blob_create(
@@ -252,7 +257,7 @@ async function subsetFont(
   }
 
   const subsetFont = Buffer.from(
-    heapu8.subarray(offset, offset + subsetByteLength)
+    heapu8().subarray(offset, offset + subsetByteLength)
   );
 
   // Clean up
