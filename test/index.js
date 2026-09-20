@@ -644,5 +644,69 @@ describe('subset-font', function () {
         });
       });
     });
+
+    describe('with keepAllGlyphs', function () {
+      it('should instance the font while retaining the full glyph set', async function () {
+        const original = fontkit.create(this.variableRobotoFont);
+        const result = await subsetFont(this.variableRobotoFont, undefined, {
+          keepAllGlyphs: true,
+          variationAxes: { wght: 200 },
+        });
+        const instanced = fontkit.create(result);
+
+        expect(instanced.numGlyphs, 'to equal', original.numGlyphs);
+        expect(
+          [...instanced.characterSet].sort(),
+          'to equal',
+          [...original.characterSet].sort()
+        );
+        expect(instanced.variationAxes, 'not to have key', 'wght');
+        expect(instanced.variationAxes, 'to have keys', ['GRAD', 'slnt']);
+      });
+
+      it('should produce a font that can be subset again', async function () {
+        const instanced = await subsetFont(this.variableRobotoFont, undefined, {
+          keepAllGlyphs: true,
+          variationAxes: { wght: 200 },
+        });
+        const result = await subsetFont(instanced, 'abcd');
+
+        expect(result, 'to include code point', 'a'.codePointAt(0));
+        expect(result, 'not to include code point', 'e'.codePointAt(0));
+      });
+
+      it('should accept an empty subset text', async function () {
+        const result = await subsetFont(this.variableRobotoFont, '', {
+          keepAllGlyphs: true,
+        });
+
+        expect(result, 'to include code point', 'a'.codePointAt(0));
+      });
+
+      it('should error when pinning a non-existent axis', async function () {
+        await expect(
+          () =>
+            subsetFont(this.variableRobotoFont, undefined, {
+              keepAllGlyphs: true,
+              variationAxes: {
+                foob: 123,
+              },
+            }),
+          'to error',
+          'hb_subset_input_pin_axis_location (harfbuzz) returned zero when pinning foob to 123, indicating failure. Maybe the axis does not exist in the font?'
+        );
+      });
+
+      it('should error when a subset text is also given', async function () {
+        await expect(
+          () =>
+            subsetFont(this.variableRobotoFont, 'abcd', {
+              keepAllGlyphs: true,
+            }),
+          'to error with',
+          'The subset text must not be given when keepAllGlyphs is true'
+        );
+      });
+    });
   });
 });
