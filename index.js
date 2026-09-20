@@ -88,7 +88,9 @@ async function subsetFont(
 
   // The wasm memory can grow while subsetting, which detaches any previously
   // created view, so take a fresh one at each point of use.
-  const heapu8 = () => new Uint8Array(harfbuzzJsWasm.memory.buffer);
+  function getHeapu8() {
+    return new Uint8Array(harfbuzzJsWasm.memory.buffer);
+  }
 
   originalFont = await fontverter.convert(originalFont, 'truetype');
 
@@ -100,7 +102,7 @@ async function subsetFont(
   }
 
   const fontBuffer = harfbuzzJsWasm.malloc(originalFont.byteLength);
-  heapu8().set(new Uint8Array(originalFont), fontBuffer);
+  getHeapu8().set(new Uint8Array(originalFont), fontBuffer);
 
   // Create the face
   const blob = harfbuzzJsWasm.hb_blob_create(
@@ -257,7 +259,7 @@ async function subsetFont(
   }
 
   const subsetFont = Buffer.from(
-    heapu8().subarray(offset, offset + subsetByteLength)
+    getHeapu8().subarray(offset, offset + subsetByteLength)
   );
 
   // Clean up
