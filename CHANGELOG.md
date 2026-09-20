@@ -1,3 +1,13 @@
+### v2.9.0 (2026-09-20)
+
+#### Pull requests
+
+- [#31](https://github.com/papandreou/subset-font/pull/31) feat\(deps\): upgrade to harfbuzzjs v1.6.1 ([Daniel Roe](mailto:daniel@roe.dev))
+
+#### Commits to master
+
+- [Style nit: heapu8 =&gt; getHeapu8, use function decl](https://github.com/papandreou/subset-font/commit/b57f0b95443fcff7daa2976785b215391ff67875) ([Andreas Lind](mailto:andreas.lind@workday.com))
+
 ### v2.8.0 (2026-09-20)
 
 #### Pull requests
