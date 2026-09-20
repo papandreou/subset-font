@@ -1,4 +1,14 @@
-### v2.7.0 (2026-08-29)
+### v2.8.0 (2026-09-20)
+
+#### Pull requests
+
+- [#32](https://github.com/papandreou/subset-font/pull/32) feat: add `keepAllGlyphs` option to instance without subsetting ([Daniel Roe](mailto:daniel@roe.dev))
+
+#### Commits to master
+
+- [Remove extraneous tests from \#32](https://github.com/papandreou/subset-font/commit/e55412f337980776ed29cd87736682cfe43239af) ([Andreas Lind](mailto:andreas.lind@workday.com))
+
+### v2.7.0 (2026-08-30)
 
 - [#29](https://github.com/papandreou/subset-font/pull/29) refactor: replace `lodash.once` with a local helper ([Daniel Roe](mailto:daniel@roe.dev))
 
