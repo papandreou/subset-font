@@ -161,6 +161,25 @@ describe('subset-font', function () {
       });
     });
 
+    describe('with the notdefOutline flag', function () {
+      it('should empty the .notdef glyph by default', async function () {
+        const result = await subsetFont(this.sfntFont, 'abcd');
+
+        expect(fontkit.create(result).getGlyph(0).path.commands, 'to be empty');
+      });
+
+      it('should keep the outline of the .notdef glyph', async function () {
+        const result = await subsetFont(this.sfntFont, 'abcd', {
+          notdefOutline: true,
+        });
+
+        expect(
+          fontkit.create(result).getGlyph(0).path.commands,
+          'not to be empty'
+        );
+      });
+    });
+
     describe('when dropping tables', function () {
       it('should omit the requested tables', async function () {
         const result = await subsetFont(this.sfntFont, 'abcd', {
